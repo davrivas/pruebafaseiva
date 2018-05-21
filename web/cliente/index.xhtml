@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <meta charset="utf-8"/>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous"/>
+        <title>Menu cliente</title>
+    </h:head>
+    <h:body>
+        <div class="container">
+            <h1 class="text-center">Cliente</h1>
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">Bienvenid@ #{sesionControlador.usuario.nombres} #{sesionControlador.usuario.primerApellido} #{sesionControlador.usuario.segundoApellido}</li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.xhtml">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <h:form prependId="false">
+                                <h:commandLink class="nav-link" action="#{sesionControlador.cerrarSesion()}">Cerrar sesión</h:commandLink>
+                            </h:form>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <h2>Mis cuentas</h2>
+
+
+            <h:dataTable class="table table-striped" value="#{sesionControlador.usuario.cuentaList}" var="c">
+                <h:column>
+                    <f:facet name="header">Número</f:facet>
+                    <h:outputLabel value="#{c.numero}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Fecha de apertura</f:facet>
+                    <h:outputLabel value="#{c.fechaApertura}">
+                        <f:convertDateTime pattern="yyyy-MM-dd"/>
+                    </h:outputLabel>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Saldo</f:facet>
+                    <h:outputLabel value="$#{c.saldo}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Estado</f:facet>
+                    <h:outputLabel value="#{c.estado}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Sucursal</f:facet>
+                    <h:outputLabel value="#{c.tblSucursalId.direccion}, #{c.tblSucursalId.tblCiudadesCodigo.nombre}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Tipo de cuenta</f:facet>
+                    <h:outputLabel value="#{c.tblTiposCuentasId.nombre}"/>
+                </h:column>          
+            </h:dataTable>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    </h:body>
+</html>
+

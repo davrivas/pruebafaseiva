@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <meta charset="utf-8"/>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous"/>
+        <title>Login</title>
+    </h:head>
+    <h:body>
+        <div class="container col-4 mt-5">
+            <h1 class="text-center mb-4">Iniciar sesión</h1>
+
+            <h:form prependId="false" id="login">
+                <div class="form-group">
+                    <h:outputLabel for="correo" value="Correo electrónico"/>
+                    <h:inputText value="#{sesionControlador.correo}" a:type="email" class="form-control" a:placeholder="Ingrese correo" a:required="required" id="correo" a:name="correo" a:autofocus="" />
+                </div>
+                <div class="form-group">
+                    <h:outputLabel value="Clave" for="clave" />
+                    <h:inputSecret value="#{sesionControlador.clave}" class="form-control" a:placeholder="Ingrese clave" a:required="required" id="clave" a:name="clave" />
+                </div>
+                <div>
+                    <h:messages globalOnly="true" showDetail="true" style="list-style: none; margin-left: -35px; color: #f00;"  />
+                </div>
+                <h:commandButton a:type="submit" class="btn btn-primary btn-block" value="Iniciar sesión" action="#{sesionControlador.iniciarSesion()}" id="iniciar-sesion" a:name="iniciar-sesion" />
+            </h:form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+</h:body>
+</html>
+
