@@ -40,7 +40,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Cuenta.findByFechaApertura", query = "SELECT c FROM Cuenta c WHERE c.fechaApertura = :fechaApertura")
     , @NamedQuery(name = "Cuenta.findBySaldo", query = "SELECT c FROM Cuenta c WHERE c.saldo = :saldo")
     , @NamedQuery(name = "Cuenta.findByEstado", query = "SELECT c FROM Cuenta c WHERE c.estado = :estado")
-    , @NamedQuery(name = "Cuenta.findCuentasAhorrosCorriente", query = "SELECT c FROM Cuenta c INNER JOIN c.tblTiposCuentasId t WHERE t.id = 1 OR t.id = 2")})
+    , @NamedQuery(name = "Cuenta.findCuentasAhorrosCorriente", query = "SELECT c FROM Cuenta c INNER JOIN c.tblTiposCuentasId t WHERE t.id = 1 OR t.id = 2")
+    , @NamedQuery(name = "Cuenta.findCuentaMasMovimientosUltimoMes", query = "SELECT c FROM Cuenta c INNER JOIN c.movimientoCuentaList m")})
 public class Cuenta implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -184,5 +185,5 @@ public class Cuenta implements Serializable {
     public String toString() {
         return "edu.davr.prueba.modelo.entidades.Cuenta[ id=" + id + " ]";
     }
-    
+
 }
