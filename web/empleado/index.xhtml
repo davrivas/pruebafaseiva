@@ -2,14 +2,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
     <h:head>
-        <meta charset="utf8"/>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous"/>
+        <ui:include src="/WEB-INF/head.xhtml"/>
         <title>Menu empleado</title>
     </h:head>
     <h:body>
-        <div class="container-fluid col-10">
+        <div class="container">
             <h1 class="text-center">Empleado</h1>
 
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -33,34 +34,130 @@
                     </ul>
                 </div>
             </nav>
-            
+
 <!--            <h:dataTable class="table" value="#{empleadoControlador.cuentas}" var="s">
+    <h:column>
+        <f:facet name="header">ID</f:facet>
+        <h:outputLabel value="#{s.id}"/>
+    </h:column>
+    <h:column>
+        <f:facet name="header">Barrio</f:facet>
+        <h:outputLabel value="#{s.barrio}"/>
+    </h:column>
+    <h:column>
+        <f:facet name="header">Dirección</f:facet>
+        <h:outputLabel value="#{s.direccion}"/>
+    </h:column>
+    <h:column>
+        <f:facet name="header">Telefonos</f:facet>
+        <h:outputLabel value="#{s.telefonos}"/>
+    </h:column>
+    <h:column>
+        <f:facet name="header">Ciudad</f:facet>
+        <h:outputLabel value="#{s.tblCiudadesCodigo.nombre}"/>
+    </h:column>
+</h:dataTable>-->
+
+            <h2>Clientes</h2>
+
+            <button type="button" class="btn btn-success mt-1 mb-2" data-toggle="modal" data-target="#modalInsertar">
+                <span class="fa fa-plus"></span> Registrar cliente
+            </button>
+
+            <h:dataTable class="table table-striped" value="#{empleadoControlador.clientes}" var="c">
                 <h:column>
-                    <f:facet name="header">ID</f:facet>
-                    <h:outputLabel value="#{s.id}"/>
+                    <f:facet name="header">Documento</f:facet>
+                    <h:outputLabel value="#{c.tblTiposDocumentoId.sigla} #{c.documento}"/>
                 </h:column>
                 <h:column>
-                    <f:facet name="header">Barrio</f:facet>
-                    <h:outputLabel value="#{s.barrio}"/>
+                    <f:facet name="header">Nombres</f:facet>
+                    <h:outputLabel value="#{c.nombres}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Apellidos</f:facet>
+                    <h:outputLabel value="#{c.primerApellido} #{c.segundoApellido}"/>
                 </h:column>
                 <h:column>
                     <f:facet name="header">Dirección</f:facet>
-                    <h:outputLabel value="#{s.direccion}"/>
+                    <h:outputLabel value="#{c.direccion}, #{c.tblCiudadesCodigo.nombre}"/>
                 </h:column>
                 <h:column>
-                    <f:facet name="header">Telefonos</f:facet>
-                    <h:outputLabel value="#{s.telefonos}"/>
+                    <f:facet name="header">Teléfono</f:facet>
+                    <h:outputLabel value="#{c.telefono}"/>
                 </h:column>
                 <h:column>
-                    <f:facet name="header">Ciudad</f:facet>
-                    <h:outputLabel value="#{s.tblCiudadesCodigo.nombre}"/>
+                    <f:facet name="header">Correo</f:facet>
+                    <h:outputLabel value="#{c.correo}"/>
                 </h:column>
-            </h:dataTable>-->
+            </h:dataTable>
         </div>
 
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+        <div class="modal fade" id="modalInsertar" tabindex="-1" role="dialog" aria-labelledby="modalInsertarTitulo" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <h:panelGroup id="modalInsertarContenido" class="modal-content " layout="block">
+                    <h:form id="form-insert-cliente" prependId="false">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalInsertarTitulo">Insertar cliente</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row form-group ml-2 mr-2">
+                                <h:outputLabel value="Tipo de documento" />
+                                <h:selectOneMenu class="form-control" a:required="" value="#{empleadoControlador.cliente.tblTiposDocumentoId}">
+                                    <f:selectItems value="#{empleadoControlador.tiposDocumento}" var="tp" itemLabel="#{tp.nombre}"/>
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="row form-group ml-2 mr-2">
+                                <h:outputLabel value="Número de documento" />
+                                <h:inputText class="form-control" a:type="number" a:placeholder="Ingrese número de documento" a:required="" value="#{empleadoControlador.cliente.documento}"/>
+                            </div>
+                            <div class="row form-group ml-2 mr-2">
+                                <h:outputLabel value="Nombres" />
+                                <h:inputText class="form-control" a:placeholder="Ingrese nombre" a:required="" value="#{empleadoControlador.cliente.nombres}"/>
+                            </div>
+                            <div class="row form-group ml-2 mr-2">
+                                <h:outputLabel value="Primer apellido" />
+                                <h:inputText class="form-control" a:placeholder="Ingrese primer apellido" a:required="" value="#{empleadoControlador.cliente.primerApellido}"/>
+                            </div>
+                            <div class="row form-group ml-2 mr-2">
+                                <h:outputLabel value="Segundo apellido" />
+                                <h:inputText class="form-control" a:placeholder="Ingrese segundo apellido" value="#{empleadoControlador.cliente.segundoApellido}"/>
+                            </div>
+                            <div class="row form-group ml-2 mr-2">
+                                <h:outputLabel value="Dirección" />
+                                <h:inputText class="form-control" a:placeholder="Ingrese dirección" a:required="" value="#{empleadoControlador.cliente.direccion}"/>
+                            </div>
+                            <div class="row form-group ml-2 mr-2">
+                                <h:outputLabel value="Ciudad" />
+                                <h:selectOneMenu class="form-control" a:required="" value="#{empleadoControlador.cliente.tblCiudadesCodigo}">
+                                    <f:selectItems value="#{empleadoControlador.ciudades}" var="c" itemLabel="#{c.nombre}"/>
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="row form-group ml-2 mr-2">
+                                <h:outputLabel value="Teléfono" />
+                                <h:inputText class="form-control" a:placeholder="Ingrese teléfono" a:required="" value="#{empleadoControlador.cliente.telefono}"/>
+                            </div>
+                            <div class="row form-group ml-2 mr-2">
+                                <h:outputLabel value="Correo" />
+                                <h:inputText class="form-control" a:type="email" a:placeholder="Ingrese correo" a:required="" value="#{empleadoControlador.cliente.correo}"/>
+                            </div>
+                            <div class="row form-group ml-2 mr-2">
+                                <h:outputLabel value="Clave" />
+                                <h:inputSecret class="form-control" a:placeholder="Ingrese clave" a:required="" value="#{empleadoControlador.cliente.clave}"/>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <h:commandButton action="#{empleadoControlador.registrarCliente()}" class="btn btn-success" value="Registrar sucursal" a:type="submit"/>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </h:form>
+                </h:panelGroup>
+            </div>
+        </div>
+
+        <ui:include src="/WEB-INF/script.xhtml"/>
     </h:body>
 </html>
 

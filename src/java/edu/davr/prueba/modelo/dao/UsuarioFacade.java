@@ -6,6 +6,7 @@
 package edu.davr.prueba.modelo.dao;
 
 import edu.davr.prueba.modelo.entidades.Usuario;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -37,11 +38,21 @@ public class UsuarioFacade extends AbstractFacade<Usuario> implements UsuarioFac
             TypedQuery<Usuario> tq = getEntityManager().createNamedQuery("Usuario.findByCorreoClave", Usuario.class);
             tq.setParameter("correo", correo);
             tq.setParameter("clave", clave);
-            
+
             return tq.getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
     }
-    
+
+    @Override
+    public List<Usuario> findClientes() {
+        try {
+            TypedQuery<Usuario> tq = getEntityManager().createNamedQuery("Usuario.findClientes", Usuario.class);
+            return tq.getResultList();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
 }

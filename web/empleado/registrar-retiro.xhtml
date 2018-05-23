@@ -13,9 +13,9 @@
     <h:body>
         <div class="container-fluid col-6">
             <h1 class="text-center">Empleado</h1>
-            
+
             <h2 class="text-center">Registrar retiro</h2>
-            
+
             <h:form prependId="false" id="login">
                 <div class="form-group">
                     <h:outputLabel value="Valor" />
@@ -27,7 +27,7 @@
                         <f:selectItems value="#{empleadoControlador.cuentasAC}" var="c" itemLabel="Cuenta #{c.tblTiposCuentasId.nombre} ##{c.numero} de #{c.tblUsuariosId.nombres} #{c.tblUsuariosId.primerApellido} #{c.tblUsuariosId.segundoApellido}" />
                     </h:selectOneMenu>
                 </div>
-                <h:commandButton a:type="submit" class="btn btn-primary" value="Registrar retiro" action="#{empleadoControlador.registrarRetiro()}"/>
+                <h:commandButton a:type="submit" class="btn btn-success" value="Registrar retiro" action="#{empleadoControlador.registrarRetiro()}"/>
                 <a class="btn btn-light" href="index.xhtml?faces-redirect=true">Cancelar</a>
             </h:form>
         </div>
