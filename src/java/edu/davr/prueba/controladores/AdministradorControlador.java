@@ -11,7 +11,6 @@ import edu.davr.prueba.modelo.dao.MovimientoCuentaFacadeLocal;
 import edu.davr.prueba.modelo.dao.SucursalFacadeLocal;
 import edu.davr.prueba.modelo.entidades.Ciudad;
 import edu.davr.prueba.modelo.entidades.Cuenta;
-//import edu.davr.prueba.modelo.entidades.MovimientoCuenta;
 import edu.davr.prueba.modelo.entidades.Sucursal;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -26,11 +25,12 @@ import javax.ejb.EJB;
 @Named(value = "administradorControlador")
 @SessionScoped
 public class AdministradorControlador implements Serializable {
-    
+
     @EJB
     private SucursalFacadeLocal sfl;
     private List<Sucursal> sucursales;
     private Sucursal sucursal = new Sucursal();
+    private Sucursal sucursalSeleccionada = new Sucursal();
     @EJB
     private CiudadFacadeLocal ciudadfl;
     private List<Ciudad> ciudades;
@@ -39,7 +39,7 @@ public class AdministradorControlador implements Serializable {
     private List<Cuenta> cuentas;
     @EJB
     private MovimientoCuentaFacadeLocal mcfl;
-//    private MovimientoCuenta cuentaMasMovimientos;
+//    private Cuenta cuentaMasMovimientos;
 
     /**
      * Creates a new instance of AdministradorControlador
@@ -52,7 +52,7 @@ public class AdministradorControlador implements Serializable {
     }
 
     public List<Ciudad> getCiudades() {
-            return ciudadfl.findAll();
+        return ciudadfl.findAll();
     }
 
     public List<Cuenta> getCuentas() {
@@ -67,14 +67,28 @@ public class AdministradorControlador implements Serializable {
         this.sucursal = sucursal;
     }
 
-//    public MovimientoCuenta getCuentaMasMovimientos() {
-//        return mcfl.cuentaConMasMovimientos();
-//    }
-    
+    public Sucursal getSucursalSeleccionada() {
+        return sucursalSeleccionada;
+    }
+
+    public void setSucursalSeleccionada(Sucursal sucursalSeleccionada) {
+        this.sucursalSeleccionada = sucursalSeleccionada;
+    }
+
     public String registrarSucursal() {
         sfl.create(sucursal);
         sucursal = new Sucursal();
         return "index.xhtml?faces-redirect=true";
     }
-    
+
+    public void seleccionarSucursal(Sucursal s) {
+        sucursalSeleccionada = s;
+    }
+
+    public String eliminarSucursal() {
+        sfl.remove(sucursalSeleccionada);
+        sucursalSeleccionada = new Sucursal();
+        return "index.xhtml?faces-redirect=true";
+    }
+
 }
