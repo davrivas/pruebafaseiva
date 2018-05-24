@@ -29,9 +29,11 @@ public interface CuentaFacadeLocal {
     List<Cuenta> findRange(int[] range);
 
     int count();
-    
+
     List<Cuenta> findAllOrderByDate();
-    
+
+    List<Cuenta> findAllNoCanceladas();
+
     List<Cuenta> findCuentasAhorrosCorriente();
-    
+
 }

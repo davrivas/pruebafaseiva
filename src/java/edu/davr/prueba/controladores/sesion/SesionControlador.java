@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.davr.prueba.controladores;
+package edu.davr.prueba.controladores.sesion;
 
 import edu.davr.prueba.modelo.dao.UsuarioFacadeLocal;
 import edu.davr.prueba.modelo.entidades.Usuario;

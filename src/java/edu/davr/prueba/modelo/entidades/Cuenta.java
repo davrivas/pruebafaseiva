@@ -35,6 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Cuenta.findAll", query = "SELECT c FROM Cuenta c ORDER BY c.fechaApertura DESC")
+    , @NamedQuery(name = "Cuenta.findAllNoCanceladas", query = "SELECT c FROM Cuenta c WHERE c.estado = 'Abierta' ORDER BY c.fechaApertura DESC")
     , @NamedQuery(name = "Cuenta.findById", query = "SELECT c FROM Cuenta c WHERE c.id = :id")
     , @NamedQuery(name = "Cuenta.findByNumero", query = "SELECT c FROM Cuenta c WHERE c.numero = :numero")
     , @NamedQuery(name = "Cuenta.findByFechaApertura", query = "SELECT c FROM Cuenta c WHERE c.fechaApertura = :fechaApertura")

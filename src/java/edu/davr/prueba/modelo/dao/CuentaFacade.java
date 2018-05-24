@@ -41,7 +41,7 @@ public class CuentaFacade extends AbstractFacade<Cuenta> implements CuentaFacade
             return null;
         }
     }
-    
+
     @Override
     public List<Cuenta> findCuentasAhorrosCorriente() {
         try {
@@ -51,5 +51,15 @@ public class CuentaFacade extends AbstractFacade<Cuenta> implements CuentaFacade
             return null;
         }
     }
-    
+
+    @Override
+    public List<Cuenta> findAllNoCanceladas() {
+        try {
+            TypedQuery tq = getEntityManager().createNamedQuery("Cuenta.findAllNoCanceladas", Cuenta.class);
+            return tq.getResultList();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
 }

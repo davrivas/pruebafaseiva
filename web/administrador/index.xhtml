@@ -37,8 +37,7 @@
 
             <h2>Sucursales</h2>
 
-
-            <button type="button" class="btn btn-danger mt-1 mb-2" data-toggle="modal" data-target="#modalInsertar">
+            <button type="button" class="btn btn-primary mt-1 mb-2" data-toggle="modal" data-target="#modalInsertar">
                 <span class="fa fa-plus"></span> Registrar sucursal
             </button>
 
@@ -66,7 +65,7 @@
                 </h:column>
                 <h:column>
                     <f:facet name="header">Eliminar</f:facet>
-                    <h:commandLink actionListener="#{administradorControlador.seleccionarSucursal(s)}" class="btn btn-danger" a:data-toggle="modal" a:data-target="#modalEliminar">
+                    <h:commandLink actionListener="#{administradorControlador.seleccionarSucursal(s)}" class="btn btn-primary" a:data-toggle="modal" a:data-target="#modalEliminar">
                         <f:ajax render=":contenidoModalEliminar"/>
                         <span class="fa fa-trash"></span>
                     </h:commandLink>
@@ -146,7 +145,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <h:commandButton action="#{administradorControlador.registrarSucursal()}" class="btn btn-danger" value="Registrar sucursal" a:type="submit"/>
+                            <h:commandButton action="#{administradorControlador.registrarSucursal()}" class="btn btn-primary" value="Registrar sucursal" a:type="submit"/>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                         </div>
                     </h:form>
@@ -173,7 +172,7 @@
                             <p><strong>Telefonos:</strong> #{administradorControlador.sucursalSeleccionada.telefonos}</p>
                         </div>
                         <div class="modal-footer">
-                            <h:commandButton action="#{administradorControlador.eliminarSucursal()}" class="btn btn-danger" value="Eliminar sucursal" a:type="submit"/>
+                            <h:commandButton action="#{administradorControlador.eliminarSucursal()}" class="btn btn-primary" value="Eliminar sucursal" a:type="submit"/>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                         </div>
                     </h:form>

@@ -47,6 +47,7 @@ public class EmpleadoControlador implements Serializable {
     private List<Cuenta> cuentas;
     // Para las cuentas de ahorro y corriente
     private List<Cuenta> cuentasAC;
+    private Cuenta cuentaSeleccionada;
     @EJB
     private TipoCuentaFacadeLocal tcfl;
     private List<TipoCuenta> tiposCuenta;
@@ -71,6 +72,14 @@ public class EmpleadoControlador implements Serializable {
 
     public List<Cuenta> getCuentasAC() {
         return cfl.findCuentasAhorrosCorriente();
+    }
+
+    public Cuenta getCuentaSeleccionada() {
+        return cuentaSeleccionada;
+    }
+
+    public void setCuentaSeleccionada(Cuenta cuentaSeleccionada) {
+        this.cuentaSeleccionada = cuentaSeleccionada;
     }
 
     public List<TipoCuenta> getTiposCuenta() {
@@ -142,6 +151,34 @@ public class EmpleadoControlador implements Serializable {
         ufl.create(cliente);
 
         cliente = new Usuario();
+        return "index.xhtml?faces-redirect=true";
+    }
+
+    public void seleccionarCuenta(Cuenta c) {
+        cuentaSeleccionada = c;
+    }
+
+    public String mostrarIconoCancelarCuenta(Cuenta c) {
+        String icono = "";
+
+        if ((c.getTblTiposCuentasId().getId() == 1 || c.getTblTiposCuentasId().getId() == 2) && c.getEstado().equals("Abierta")) {
+            icono = "<h:commandLink class=\"btn btn-success\" actionListener=\"#{empleadoControlador.seleccionarCuenta(c)}\" a:data-toggle=\"modal\" a:data-target=\"#modalCancelar\">\n"
+                    + "<f:ajax render=\":contenidoModalCancelar\"/>\n"
+                    + "<span class=\"fa fa-window-close\"></span>\n"
+                    + "</h:commandLink>";
+        }
+
+        return icono;
+    }
+
+    public boolean findCAC(Cuenta c) {
+        return (c.getTblTiposCuentasId().getId() == 1 || c.getTblTiposCuentasId().getId() == 2) && c.getEstado().equals("Abierta");
+    }
+
+    public String cancelarCuenta() {
+        cuentaSeleccionada.setEstado("Cancelada");
+        cfl.edit(cuentaSeleccionada);
+        cuentaSeleccionada = new Cuenta();
         return "index.xhtml?faces-redirect=true";
     }
 
