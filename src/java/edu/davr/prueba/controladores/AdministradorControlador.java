@@ -37,6 +37,7 @@ public class AdministradorControlador implements Serializable {
     @EJB
     private CuentaFacadeLocal cuentafl;
     private List<Cuenta> cuentas;
+    private Cuenta cuentaConMasMovUltMes;
     @EJB
     private MovimientoCuentaFacadeLocal mcfl;
 //    private Cuenta cuentaMasMovimientos;
@@ -57,6 +58,10 @@ public class AdministradorControlador implements Serializable {
 
     public List<Cuenta> getCuentas() {
         return cuentafl.findAll();
+    }
+
+    public Cuenta getCuentaConMasMovUltMes() {
+        return cuentaConMasMovUltMes;
     }
 
     public Sucursal getSucursal() {

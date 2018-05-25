@@ -42,7 +42,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Cuenta.findBySaldo", query = "SELECT c FROM Cuenta c WHERE c.saldo = :saldo")
     , @NamedQuery(name = "Cuenta.findByEstado", query = "SELECT c FROM Cuenta c WHERE c.estado = :estado")
     , @NamedQuery(name = "Cuenta.findCuentasAhorrosCorriente", query = "SELECT c FROM Cuenta c INNER JOIN c.tblTiposCuentasId t WHERE t.id = 1 OR t.id = 2")
-    , @NamedQuery(name = "Cuenta.findCuentaMasMovimientosUltimoMes", query = "SELECT c FROM Cuenta c INNER JOIN c.movimientoCuentaList m")})
+    , @NamedQuery(name = "Cuenta.findCuentasAhorrosCorrienteAbiertas", query = "SELECT c FROM Cuenta c INNER JOIN c.tblTiposCuentasId t WHERE t.id = 1 OR t.id = 2 AND c.estado = 'Abierta'")})
 public class Cuenta implements Serializable {
 
     private static final long serialVersionUID = 1L;

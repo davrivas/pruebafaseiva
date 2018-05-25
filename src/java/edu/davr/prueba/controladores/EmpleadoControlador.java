@@ -21,7 +21,6 @@ import edu.davr.prueba.modelo.entidades.Usuario;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -41,13 +40,18 @@ public class EmpleadoControlador implements Serializable {
     private Usuario cliente = new Usuario();
     @EJB
     private MovimientoCuentaFacadeLocal mcfl;
-    private MovimientoCuenta movimientoCuenta = new MovimientoCuenta(); // Diferenciarlos
+    private List<MovimientoCuenta> movimientos;
+    private MovimientoCuenta movimientoCuenta = new MovimientoCuenta();
     @EJB
     private CuentaFacadeLocal cfl;
     private List<Cuenta> cuentas;
+    private List<Cuenta> cuentasAbiertas;
     // Para las cuentas de ahorro y corriente
     private List<Cuenta> cuentasAC;
+    private List<Cuenta> cuentasACAbiertas;
+    private List<Cuenta> cuentasCDTMasUnAño;
     private Cuenta cuentaSeleccionada;
+    private Cuenta cuentaConMasMovUltMes;
     @EJB
     private TipoCuentaFacadeLocal tcfl;
     private List<TipoCuenta> tiposCuenta;
@@ -70,8 +74,20 @@ public class EmpleadoControlador implements Serializable {
         return cfl.findAll();
     }
 
+    public List<Cuenta> getCuentasAbiertas() {
+        return cfl.findAllNoCanceladas();
+    }
+
     public List<Cuenta> getCuentasAC() {
         return cfl.findCuentasAhorrosCorriente();
+    }
+
+    public List<Cuenta> getCuentasACAbiertas() {
+        return cfl.findCuentasAhorrosAbiertas();
+    }
+
+    public List<Cuenta> getCuentasCDTMasUnAño() {
+        return cuentasCDTMasUnAño;
     }
 
     public Cuenta getCuentaSeleccionada() {
@@ -80,6 +96,10 @@ public class EmpleadoControlador implements Serializable {
 
     public void setCuentaSeleccionada(Cuenta cuentaSeleccionada) {
         this.cuentaSeleccionada = cuentaSeleccionada;
+    }
+
+    public List<MovimientoCuenta> getMovimientos() {
+        return mcfl.findAll();
     }
 
     public List<TipoCuenta> getTiposCuenta() {
@@ -92,6 +112,10 @@ public class EmpleadoControlador implements Serializable {
 
     public void setMovimientoCuenta(MovimientoCuenta movimientoCuenta) {
         this.movimientoCuenta = movimientoCuenta;
+    }
+
+    public Cuenta getCuentaConMasMovUltMes() {
+        return cuentaConMasMovUltMes;
     }
 
     public List<Usuario> getClientes() {
@@ -119,15 +143,17 @@ public class EmpleadoControlador implements Serializable {
         movimientoCuenta.setFecha(fecha);
         movimientoCuenta.setTipoMovimiento("Consignación");
 
-        Double saldoAntiguo = movimientoCuenta.getTblCuentasId().getSaldo();
+        Cuenta cuentaActual = cfl.find(movimientoCuenta.getTblCuentasId().getId());
+        Double saldoAntiguo = cuentaActual.getSaldo();
         Double saldoNuevo = movimientoCuenta.getValor();
-        movimientoCuenta.getTblCuentasId().setSaldo(saldoAntiguo + saldoNuevo);
+        Double saldo = saldoAntiguo + saldoNuevo;
+        cuentaActual.setSaldo(saldo);
 
         mcfl.create(movimientoCuenta);
 
         movimientoCuenta = new MovimientoCuenta();
 
-        return "index.xhtml?faces-redirect=true";
+        return "movimientos.xhtml?faces-redirect=true";
     }
 
     public String registrarRetiro() {
@@ -135,15 +161,17 @@ public class EmpleadoControlador implements Serializable {
         movimientoCuenta.setFecha(fecha);
         movimientoCuenta.setTipoMovimiento("Retiro");
 
-        Double saldoAntiguo = movimientoCuenta.getTblCuentasId().getSaldo();
+        Cuenta cuentaActual = cfl.find(movimientoCuenta.getTblCuentasId().getId());
+        Double saldoAntiguo = cuentaActual.getSaldo();
         Double saldoNuevo = movimientoCuenta.getValor();
-        movimientoCuenta.getTblCuentasId().setSaldo(saldoAntiguo - saldoNuevo);
+        Double saldo = saldoAntiguo - saldoNuevo;
+        cuentaActual.setSaldo(saldo);
 
         mcfl.create(movimientoCuenta);
 
         movimientoCuenta = new MovimientoCuenta();
 
-        return "index.xhtml?faces-redirect=true";
+        return "movimientos.xhtml?faces-redirect=true";
     }
 
     public String registrarCliente() {
@@ -158,28 +186,19 @@ public class EmpleadoControlador implements Serializable {
         cuentaSeleccionada = c;
     }
 
-    public String mostrarIconoCancelarCuenta(Cuenta c) {
-        String icono = "";
-
-        if ((c.getTblTiposCuentasId().getId() == 1 || c.getTblTiposCuentasId().getId() == 2) && c.getEstado().equals("Abierta")) {
-            icono = "<h:commandLink class=\"btn btn-success\" actionListener=\"#{empleadoControlador.seleccionarCuenta(c)}\" a:data-toggle=\"modal\" a:data-target=\"#modalCancelar\">\n"
-                    + "<f:ajax render=\":contenidoModalCancelar\"/>\n"
-                    + "<span class=\"fa fa-window-close\"></span>\n"
-                    + "</h:commandLink>";
-        }
-
-        return icono;
-    }
-
-    public boolean findCAC(Cuenta c) {
-        return (c.getTblTiposCuentasId().getId() == 1 || c.getTblTiposCuentasId().getId() == 2) && c.getEstado().equals("Abierta");
-    }
-
-    public String cancelarCuenta() {
+    public String cancelarCuentaAC() {
         cuentaSeleccionada.setEstado("Cancelada");
         cfl.edit(cuentaSeleccionada);
         cuentaSeleccionada = new Cuenta();
-        return "index.xhtml?faces-redirect=true";
+        return "cuentas.xhtml?faces-redirect=true";
+    }
+
+    public String cancelarCuentaCDT() {
+        cuentaSeleccionada.setEstado("Cerrada");
+        cuentaSeleccionada.setSaldo(0);
+        cfl.edit(cuentaSeleccionada);
+        cuentaSeleccionada = new Cuenta();
+        return "cuentas.xhtml?faces-redirect=true";
     }
 
 }

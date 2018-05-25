@@ -34,12 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "MovimientoCuenta.findById", query = "SELECT m FROM MovimientoCuenta m WHERE m.id = :id")
     , @NamedQuery(name = "MovimientoCuenta.findByFecha", query = "SELECT m FROM MovimientoCuenta m WHERE m.fecha = :fecha")
     , @NamedQuery(name = "MovimientoCuenta.findByTipoMovimiento", query = "SELECT m FROM MovimientoCuenta m WHERE m.tipoMovimiento = :tipoMovimiento")
-    , @NamedQuery(name = "MovimientoCuenta.findByValor", query = "SELECT m FROM MovimientoCuenta m WHERE m.valor = :valor")
-    /*, @NamedQuery(name = "MovimientoCuenta.cuentaConMasMovimientos",
-            query = "SELECT m FROM MovimientoCuenta m WHERE m.id.size = ("
-                    + "SELECT MAX(m2.id.size) FROM MovimientoCuenta m2"
-                    + ")")
-*/})
+    , @NamedQuery(name = "MovimientoCuenta.findByValor", query = "SELECT m FROM MovimientoCuenta m WHERE m.valor = :valor")})
 public class MovimientoCuenta implements Serializable {
 
     private static final long serialVersionUID = 1L;

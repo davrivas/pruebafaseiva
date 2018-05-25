@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <ui:include src="/WEB-INF/head.xhtml"/>
+        <title>Movimientos</title>
+    </h:head>
+    <h:body>
+        <div class="container">
+            <ui:include src="/WEB-INF/menu-empleado.xhtml"/>
+
+            <h2>Movimientos</h2>
+
+            <div class="row mt-1 mb-2">
+                <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#modalRetiro">
+                    <span class="fa fa-plus"></span> Registrar retiro
+                </button>
+                <button type="button" class="btn btn-success ml-2" data-toggle="modal" data-target="#modalConsignacion">
+                    <span class="fa fa-plus"></span> Registrar consignación
+                </button>
+            </div>
+
+            <h:dataTable class="table table-striped table-responsive" value="#{empleadoControlador.movimientos}" var="m">
+                <h:column>
+                    <f:facet name="header">Fecha</f:facet>
+                    <h:outputLabel value="#{m.fecha}">
+                        <f:convertDateTime pattern="yyyy-MM-dd"/>
+                    </h:outputLabel>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Tipo de movimiento</f:facet>
+                    <h:outputLabel value="#{m.tipoMovimiento}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Valor</f:facet>
+                    <h:outputLabel value="$#{m.valor}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Cuenta</f:facet>
+                    <h:outputLabel value="#{m.tblCuentasId.numero}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Nombre del cliente</f:facet>
+                    <h:outputLabel value="#{m.tblCuentasId.tblUsuariosId.nombres} #{m.tblCuentasId.tblUsuariosId.primerApellido} #{m.tblCuentasId.tblUsuariosId.segundoApellido}"/>
+                </h:column>
+            </h:dataTable>
+
+            <div class="modal fade" id="modalRetiro" tabindex="-1" role="dialog" aria-labelledby="modalRetiroTitulo" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <h:panelGroup id="contenidoModalRetiro" class="modal-content" layout="block">
+                        <h:form id="form-retiro" prependId="false">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalRetiroTitulo">Registrar retiro</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <h:outputLabel value="Valor" />
+                                    <h:inputText a:type="number" class="form-control" required="" a:placeholder="Ingrese valor" value="#{empleadoControlador.movimientoCuenta.valor}"/>
+                                </div>
+                                <div class="form-group">
+                                    <h:outputLabel value="Cuenta" />
+                                    <h:selectOneMenu class="form-control" required="" value="#{empleadoControlador.movimientoCuenta.tblCuentasId}">
+                                        <f:selectItems value="#{empleadoControlador.cuentasACAbiertas}" var="c" itemLabel="Cuenta #{c.tblTiposCuentasId.nombre} ##{c.numero} de #{c.tblUsuariosId.nombres} #{c.tblUsuariosId.primerApellido} #{c.tblUsuariosId.segundoApellido}" />
+                                    </h:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <h:commandButton a:type="submit" class="btn btn-success" value="Registrar retiro" action="#{empleadoControlador.registrarRetiro()}"/>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            </div>
+                        </h:form>
+                    </h:panelGroup>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modalConsignacion" tabindex="-1" role="dialog" aria-labelledby="modalConsignacionTitulo" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <h:panelGroup id="contenidoModalConsignacion" class="modal-content" layout="block">
+                        <h:form id="form-consignacion" prependId="false">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalConsignacionTitulo">Registrar consignación</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <h:outputLabel value="Valor" />
+                                    <h:inputText a:type="number" class="form-control" required="" a:placeholder="Ingrese valor" value="#{empleadoControlador.movimientoCuenta.valor}"/>
+                                </div>
+                                <div class="form-group">
+                                    <h:outputLabel value="Cuenta" />
+                                    <h:selectOneMenu class="form-control" required="" value="#{empleadoControlador.movimientoCuenta.tblCuentasId}">
+                                        <f:selectItems value="#{empleadoControlador.cuentasAbiertas}" var="c" itemLabel="Cuenta #{c.tblTiposCuentasId.nombre} ##{c.numero} de #{c.tblUsuariosId.nombres} #{c.tblUsuariosId.primerApellido} #{c.tblUsuariosId.segundoApellido}"/>
+                                    </h:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <h:commandButton a:type="submit" class="btn btn-success" value="Registrar consignación" action="#{empleadoControlador.registrarConsignacion()}"/>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            </div>
+                        </h:form>
+                    </h:panelGroup>
+                </div>
+            </div>
+        </div>
+
+        <ui:include src="/WEB-INF/script.xhtml"/>
+    </h:body>
+</html>
+

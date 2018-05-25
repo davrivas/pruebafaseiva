@@ -8,33 +8,11 @@
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
         <ui:include src="/WEB-INF/head.xhtml"/>
-        <title>Menu empleado</title>
+        <title>Cliente</title>
     </h:head>
     <h:body>
         <div class="container">
-            <h1 class="text-center">Empleado</h1>
-
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.xhtml">Inicio</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="registrar-consignacion.xhtml">Registrar consignación</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="registrar-retiro.xhtml">Registrar retiro</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Cerrar sesión</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+            <ui:include src="/WEB-INF/menu-empleado.xhtml"/>
 
             <h2>Clientes</h2>
 
@@ -42,7 +20,7 @@
                 <span class="fa fa-plus"></span> Registrar cliente
             </button>
 
-            <h:dataTable class="table table-striped" value="#{empleadoControlador.clientes}" var="cl">
+            <h:dataTable class="table table-striped table-responsive" value="#{empleadoControlador.clientes}" var="cl">
                 <h:column>
                     <f:facet name="header">Documento</f:facet>
                     <h:outputLabel value="#{cl.tblTiposDocumentoId.sigla} #{cl.documento}"/>
@@ -66,50 +44,6 @@
                 <h:column>
                     <f:facet name="header">Correo</f:facet>
                     <h:outputLabel value="#{cl.correo}"/>
-                </h:column>
-            </h:dataTable>
-
-            <h2>Cuentas</h2>
-
-            <h:dataTable class="table table-striped" value="#{empleadoControlador.cuentas}" var="c">
-                <h:column>
-                    <f:facet name="header">Número</f:facet>
-                    <h:outputLabel value="#{c.numero}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Fecha de apertura</f:facet>
-                    <h:outputLabel value="#{c.fechaApertura}">
-                        <f:convertDateTime pattern="yyyy-MM-dd"/>
-                    </h:outputLabel>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Saldo</f:facet>
-                    <h:outputLabel value="$#{c.saldo}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Estado</f:facet>
-                    <h:outputLabel value="#{c.estado}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Sucursal</f:facet>
-                    <h:outputLabel value="#{c.tblSucursalId.direccion}, #{c.tblSucursalId.tblCiudadesCodigo.nombre}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Tipo de cuenta</f:facet>
-                    <h:outputLabel value="#{c.tblTiposCuentasId.nombre}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Nombre del cliente</f:facet>
-                    <h:outputLabel value="#{c.tblUsuariosId.nombres} #{c.tblUsuariosId.primerApellido} #{c.tblUsuariosId.segundoApellido}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Cancelar</f:facet>
-                    <!--<c:if test="#{empleadoControlador.findCAC(c)}">-->
-                    <h:commandLink class="btn btn-success" actionListener="#{empleadoControlador.seleccionarCuenta(c)}" a:data-toggle="modal" a:data-target="#modalCancelar">
-                        <f:ajax render=":contenidoModalCancelar"/>
-                        <span class="fa fa-window-close"></span>
-                    </h:commandLink>
-                    <!--</c:if>-->
                 </h:column>
             </h:dataTable>
         </div>
@@ -172,38 +106,6 @@
                         </div>
                         <div class="modal-footer">
                             <h:commandButton action="#{empleadoControlador.registrarCliente()}" class="btn btn-success" value="Registrar sucursal" a:type="submit"/>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        </div>
-                    </h:form>
-                </h:panelGroup>
-            </div>
-        </div>
-
-        <div class="modal fade" id="modalCancelar" tabindex="-1" role="dialog" aria-labelledby="modalCancelarTitulo" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <h:panelGroup id="contenidoModalCancelar" class="modal-content" layout="block">
-                    <h:form id="form-cancelar-sucursal" prependId="false">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalCancelarTitulo">¿Desea cancelar la cuenta?</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <p><strong>Número:</strong> #{empleadoControlador.cuentaSeleccionada.numero}</p>
-                            <p>
-                                <strong>Fecha de apertura:</strong>
-                                <h:outputText value="#{empleadoControlador.cuentaSeleccionada.fechaApertura}">
-                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
-                                </h:outputText>
-                            </p>
-                            <p><strong>Estado:</strong> #{empleadoControlador.cuentaSeleccionada.estado}</p>
-                            <p><strong>Sucursal:</strong> #{empleadoControlador.cuentaSeleccionada.tblSucursalId.direccion}</p>
-                            <p><strong>Tipo de cuenta:</strong> #{empleadoControlador.cuentaSeleccionada.tblTiposCuentasId.nombre}</p>
-                            <p><strong>Nombre del cliente:</strong> #{empleadoControlador.cuentaSeleccionada.tblUsuariosId.nombres} #{empleadoControlador.cuentaSeleccionada.tblUsuariosId.primerApellido} #{empleadoControlador.cuentaSeleccionada.tblUsuariosId.segundoApellido}</p>
-                        </div>
-                        <div class="modal-footer">
-                            <h:commandButton action="#{empleadoControlador.cancelarCuenta()}" class="btn btn-success" value="Cancelar cuenta" a:type="submit"/>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                         </div>
                     </h:form>

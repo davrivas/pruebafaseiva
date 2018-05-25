@@ -6,13 +6,12 @@
 package edu.davr.prueba.controladores.sesion;
 
 import edu.davr.prueba.modelo.dao.UsuarioFacadeLocal;
+import edu.davr.prueba.modelo.entidades.TipoUsuario;
 import edu.davr.prueba.modelo.entidades.Usuario;
 import java.io.IOException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -29,6 +28,7 @@ public class SesionControlador implements Serializable {
     @EJB
     private UsuarioFacadeLocal ufl;
     private Usuario usuario = new Usuario();
+    private TipoUsuario rol;
     private String correo;
     private String clave;
 
@@ -44,6 +44,14 @@ public class SesionControlador implements Serializable {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public TipoUsuario getRol() {
+        return rol;
+    }
+
+    public void setRol(TipoUsuario rol) {
+        this.rol = rol;
     }
 
     public String getCorreo() {
@@ -65,10 +73,11 @@ public class SesionControlador implements Serializable {
     public String iniciarSesion() {
         FacesContext fc = FacesContext.getCurrentInstance();
         usuario = ufl.findCorreoClave(correo, clave);
+        rol = usuario.getTblTiposUsuariosId();
 
         if (usuario != null) {
             // Reviso el tipo de usuario
-            switch (usuario.getTblTiposUsuariosId().getId()) {
+            switch (rol.getId()) {
                 case 1:
                     return "administrador/index.xhtml?faces-redirect=true";
                 case 2:
@@ -83,17 +92,12 @@ public class SesionControlador implements Serializable {
         return "";
     }
 
-    public void cerrarSesion() {
+    public void cerrarSesion() throws IOException {
         usuario = new Usuario();
         correo = "";
         clave = "";
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.invalidateSession();
-        try {
-            ec.redirect(ec.getRequestContextPath());
-        } catch (IOException ex) {
-            Logger.getLogger(SesionControlador.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
-        }
+        ec.redirect(ec.getRequestContextPath());
     }
 }

@@ -6,6 +6,7 @@
 package edu.davr.prueba.modelo.dao;
 
 import edu.davr.prueba.modelo.entidades.Cuenta;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -56,6 +57,16 @@ public class CuentaFacade extends AbstractFacade<Cuenta> implements CuentaFacade
     public List<Cuenta> findAllNoCanceladas() {
         try {
             TypedQuery tq = getEntityManager().createNamedQuery("Cuenta.findAllNoCanceladas", Cuenta.class);
+            return tq.getResultList();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Cuenta> findCuentasAhorrosAbiertas() {
+        try {
+            TypedQuery tq = getEntityManager().createNamedQuery("Cuenta.findCuentasAhorrosCorrienteAbiertas", Cuenta.class);
             return tq.getResultList();
         } catch (NoResultException nre) {
             return null;

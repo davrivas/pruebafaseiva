@@ -9,7 +9,7 @@
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
         <ui:include src="/WEB-INF/head.xhtml"/>
-        <title>Administrador</title>
+        <title>Administrador - Sucursales</title>
     </h:head>
     <h:body>
         <div class="container">
@@ -22,12 +22,15 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" href="index.xhtml"><span class="fa fa-home"></span> Inicio</a>
+                            <a class="nav-link" href="index.xhtml">Sucursales</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="cuentas.xhtml">Cuentas</a>
                         </li>
                         <li class="nav-item">
                             <h:form prependId="false">
                                 <h:commandLink class="nav-link" action="#{sesionControlador.cerrarSesion()}">
-                                    <span class="fa fa-sign-out-alt"></span> Cerrar sesión
+                                    <span class="fa fa-sign-out-alt"></span> Cerrar sesión (#{sesionControlador.usuario.nombres} #{sesionControlador.usuario.primerApellido} #{sesionControlador.usuario.segundoApellido})
                                 </h:commandLink>
                             </h:form>
                         </li>
@@ -41,7 +44,7 @@
                 <span class="fa fa-plus"></span> Registrar sucursal
             </button>
 
-            <h:dataTable class="table table-striped" value="#{administradorControlador.sucursales}" var="s">
+            <h:dataTable class="table table-striped table-responsive" value="#{administradorControlador.sucursales}" var="s">
                 <h:column>
                     <f:facet name="header">Dirección</f:facet>
                     <h:outputLabel value="#{s.direccion}"/>
@@ -72,111 +75,70 @@
                 </h:column>
             </h:dataTable>
 
-            <h2>Cuentas</h2>
-
-            <p>La cuenta que más movimientos tiene es </p>
-
-            <h:dataTable class="table table-striped" value="#{administradorControlador.cuentas}" var="c">
-                <h:column>
-                    <f:facet name="header">Número</f:facet>
-                    <h:outputLabel value="#{c.numero}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Fecha de apertura</f:facet>
-                    <h:outputLabel value="#{c.fechaApertura}">
-                        <f:convertDateTime pattern="yyyy-MM-dd"/>
-                    </h:outputLabel>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Saldo</f:facet>
-                    <h:outputLabel value="$#{c.saldo}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Estado</f:facet>
-                    <h:outputLabel value="#{c.estado}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Sucursal</f:facet>
-                    <h:outputLabel value="#{c.tblSucursalId.direccion}, #{c.tblSucursalId.tblCiudadesCodigo.nombre}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Tipo de cuenta</f:facet>
-                    <h:outputLabel value="#{c.tblTiposCuentasId.nombre}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Nombre del cliente</f:facet>
-                    <h:outputLabel value="#{c.tblUsuariosId.nombres} #{c.tblUsuariosId.primerApellido} #{c.tblUsuariosId.segundoApellido}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header"># mov.</f:facet>
-                    <h:outputLabel value="#{c.movimientoCuentaList.size()}"/>
-                </h:column>
-            </h:dataTable>
-        </div>
-
-        <div class="modal fade" id="modalInsertar" tabindex="-1" role="dialog" aria-labelledby="modalInsertarTitulo" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <h:panelGroup id="modalInsertarContenido" class="modal-content " layout="block">
-                    <h:form id="form-insert-sucursal" prependId="false">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalInsertarTitulo">Insertar sucursal</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row form-group ml-2 mr-2">
-                                <h:outputLabel value="Barrio" />
-                                <h:inputText class="form-control" a:placeholder="Ingrese barrio" value="#{administradorControlador.sucursal.barrio}"/>
+            <div class="modal fade" id="modalInsertar" tabindex="-1" role="dialog" aria-labelledby="modalInsertarTitulo" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <h:panelGroup id="modalInsertarContenido" class="modal-content " layout="block">
+                        <h:form id="form-insert-sucursal" prependId="false">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalInsertarTitulo">Insertar sucursal</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
-                            <div class="row form-group ml-2 mr-2">
-                                <h:outputLabel value="Dirección" />
-                                <h:inputText class="form-control" a:required="" a:placeholder="Ingrese dirección" value="#{administradorControlador.sucursal.direccion}"/>
+                            <div class="modal-body">
+                                <div class="row form-group ml-2 mr-2">
+                                    <h:outputLabel value="Barrio" />
+                                    <h:inputText class="form-control" a:placeholder="Ingrese barrio" value="#{administradorControlador.sucursal.barrio}"/>
+                                </div>
+                                <div class="row form-group ml-2 mr-2">
+                                    <h:outputLabel value="Dirección" />
+                                    <h:inputText class="form-control" a:required="" a:placeholder="Ingrese dirección" value="#{administradorControlador.sucursal.direccion}"/>
+                                </div>
+                                <div class="row form-group ml-2 mr-2">
+                                    <h:outputLabel value="Telefonos" />
+                                    <h:inputText class="form-control" a:required="" a:placeholder="Ingrese telefonos" value="#{administradorControlador.sucursal.telefonos}"/>
+                                </div>
+                                <div class="row form-group ml-2 mr-2">
+                                    <h:outputLabel value="Ciudad" />
+                                    <h:selectOneMenu class="form-control" a:required="" value="#{administradorControlador.sucursal.tblCiudadesCodigo}">
+                                        <f:selectItems value="#{administradorControlador.ciudades}" var="c" itemLabel="#{c.nombre}"/>
+                                    </h:selectOneMenu>
+                                </div>
                             </div>
-                            <div class="row form-group ml-2 mr-2">
-                                <h:outputLabel value="Telefonos" />
-                                <h:inputText class="form-control" a:required="" a:placeholder="Ingrese telefonos" value="#{administradorControlador.sucursal.telefonos}"/>
+                            <div class="modal-footer">
+                                <h:commandButton action="#{administradorControlador.registrarSucursal()}" class="btn btn-primary" value="Registrar sucursal" a:type="submit"/>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                             </div>
-                            <div class="row form-group ml-2 mr-2">
-                                <h:outputLabel value="Ciudad" />
-                                <h:selectOneMenu class="form-control" a:required="" value="#{administradorControlador.sucursal.tblCiudadesCodigo}">
-                                    <f:selectItems value="#{administradorControlador.ciudades}" var="c" itemLabel="#{c.nombre}"/>
-                                </h:selectOneMenu>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <h:commandButton action="#{administradorControlador.registrarSucursal()}" class="btn btn-primary" value="Registrar sucursal" a:type="submit"/>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        </div>
-                    </h:form>
-                </h:panelGroup>
+                        </h:form>
+                    </h:panelGroup>
+                </div>
             </div>
-        </div>
 
-        <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="modalEliminarTitulo" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <h:panelGroup id="contenidoModalEliminar" class="modal-content" layout="block">
-                    <h:form id="form-eliminar-sucursal" prependId="false">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalInsertarTitulo">¿Desea eliminar la sucursal?</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <p><strong>Dirección:</strong> #{administradorControlador.sucursalSeleccionada.direccion}</p>
-                            <c:if test="#{not empty administradorControlador.sucursalSeleccionada.barrio}">
-                                <p><strong>Barrio:</strong> #{administradorControlador.sucursalSeleccionada.barrio}</p>
-                            </c:if>
-                            <p><strong>Ciudad:</strong> #{administradorControlador.sucursalSeleccionada.tblCiudadesCodigo.nombre}</p>
-                            <p><strong>Telefonos:</strong> #{administradorControlador.sucursalSeleccionada.telefonos}</p>
-                        </div>
-                        <div class="modal-footer">
-                            <h:commandButton action="#{administradorControlador.eliminarSucursal()}" class="btn btn-primary" value="Eliminar sucursal" a:type="submit"/>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        </div>
-                    </h:form>
-                </h:panelGroup>
+            <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="modalEliminarTitulo" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <h:panelGroup id="contenidoModalEliminar" class="modal-content" layout="block">
+                        <h:form id="form-eliminar-sucursal" prependId="false">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalInsertarTitulo">¿Desea eliminar la sucursal?</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>Dirección:</strong> #{administradorControlador.sucursalSeleccionada.direccion}</p>
+                                <c:if test="#{not empty administradorControlador.sucursalSeleccionada.barrio}">
+                                    <p><strong>Barrio:</strong> #{administradorControlador.sucursalSeleccionada.barrio}</p>
+                                </c:if>
+                                <p><strong>Ciudad:</strong> #{administradorControlador.sucursalSeleccionada.tblCiudadesCodigo.nombre}</p>
+                                <p><strong>Telefonos:</strong> #{administradorControlador.sucursalSeleccionada.telefonos}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <h:commandButton action="#{administradorControlador.eliminarSucursal()}" class="btn btn-primary" value="Eliminar sucursal" a:type="submit"/>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            </div>
+                        </h:form>
+                    </h:panelGroup>
+                </div>
             </div>
         </div>
 

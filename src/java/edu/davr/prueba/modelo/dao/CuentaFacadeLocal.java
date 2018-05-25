@@ -36,4 +36,6 @@ public interface CuentaFacadeLocal {
 
     List<Cuenta> findCuentasAhorrosCorriente();
 
+    List<Cuenta> findCuentasAhorrosAbiertas();
+
 }
