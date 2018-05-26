@@ -38,4 +38,8 @@ public interface CuentaFacadeLocal {
 
     List<Cuenta> findCuentasAhorrosAbiertas();
 
+    List<Cuenta> CDTMasUnYear();
+
+    Cuenta CuentaMasMovimientosUnMes();
+
 }

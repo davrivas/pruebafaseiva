@@ -6,6 +6,7 @@
 package edu.davr.prueba.modelo.dao;
 
 import edu.davr.prueba.modelo.entidades.Cuenta;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -36,7 +37,7 @@ public class CuentaFacade extends AbstractFacade<Cuenta> implements CuentaFacade
     @Override
     public List<Cuenta> findAllOrderByDate() {
         try {
-            TypedQuery tq = getEntityManager().createNamedQuery("Cuenta.findAll", Cuenta.class);
+            TypedQuery tq = getEntityManager().createQuery("SELECT c FROM Cuenta c ORDER BY c.fechaApertura DESC", Cuenta.class);
             return tq.getResultList();
         } catch (NoResultException nre) {
             return null;
@@ -46,7 +47,7 @@ public class CuentaFacade extends AbstractFacade<Cuenta> implements CuentaFacade
     @Override
     public List<Cuenta> findCuentasAhorrosCorriente() {
         try {
-            TypedQuery tq = getEntityManager().createNamedQuery("Cuenta.findCuentasAhorrosCorriente", Cuenta.class);
+            TypedQuery tq = getEntityManager().createQuery("SELECT c FROM Cuenta c INNER JOIN c.tblTiposCuentasId t WHERE t.id = 1 OR t.id = 2", Cuenta.class);
             return tq.getResultList();
         } catch (NoResultException nre) {
             return null;
@@ -56,7 +57,7 @@ public class CuentaFacade extends AbstractFacade<Cuenta> implements CuentaFacade
     @Override
     public List<Cuenta> findAllNoCanceladas() {
         try {
-            TypedQuery tq = getEntityManager().createNamedQuery("Cuenta.findAllNoCanceladas", Cuenta.class);
+            TypedQuery tq = getEntityManager().createQuery("SELECT c FROM Cuenta c WHERE c.estado = 'Abierta'", Cuenta.class);
             return tq.getResultList();
         } catch (NoResultException nre) {
             return null;
@@ -66,11 +67,31 @@ public class CuentaFacade extends AbstractFacade<Cuenta> implements CuentaFacade
     @Override
     public List<Cuenta> findCuentasAhorrosAbiertas() {
         try {
-            TypedQuery tq = getEntityManager().createNamedQuery("Cuenta.findCuentasAhorrosCorrienteAbiertas", Cuenta.class);
+            TypedQuery tq = getEntityManager().createQuery("SELECT c FROM Cuenta c INNER JOIN c.tblTiposCuentasId t WHERE (t.id = 1 OR t.id = 2) AND c.estado = 'Abierta' ORDER By c.fechaApertura DESC", Cuenta.class);
             return tq.getResultList();
         } catch (NoResultException nre) {
             return null;
         }
+    }
+
+    @Override
+    public List<Cuenta> CDTMasUnYear() {
+        try {
+            Calendar hoy = Calendar.getInstance();
+            hoy.add(Calendar.YEAR, -1);
+            Date year = hoy.getTime();
+            TypedQuery tq;
+            tq = getEntityManager().createQuery("SELECT c FROM Cuenta c WHERE t.id = 3 AND c.fechaApertura < :year ORDER BY c.fechaApertura DESC", Cuenta.class);
+            tq.setParameter("year", year);
+            return tq.getResultList();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+    @Override
+    public Cuenta CuentaMasMovimientosUnMes() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

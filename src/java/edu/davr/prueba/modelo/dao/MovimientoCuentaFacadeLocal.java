@@ -29,6 +29,7 @@ public interface MovimientoCuentaFacadeLocal {
     List<MovimientoCuenta> findRange(int[] range);
 
     int count();
-    
-//    MovimientoCuenta cuentaConMasMovimientos();
+
+    List<MovimientoCuenta> movimientosRecientes();
+
 }
