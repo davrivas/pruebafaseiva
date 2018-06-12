@@ -73,4 +73,14 @@ public class CuentaFacade extends AbstractFacade<Cuenta> implements CuentaFacade
         }
     }
 
+    @Override
+    public List<Cuenta> findCDTAbiertas() {
+        try {
+            TypedQuery tq = getEntityManager().createQuery("SELECT c FROM Cuenta c INNER JOIN c.tblTiposCuentasId t WHERE t.id = 3 AND c.estado = 'Abierta' ORDER BY c.fechaApertura DESC", Cuenta.class);
+            return tq.getResultList();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
 }

@@ -21,6 +21,8 @@ import edu.davr.prueba.modelo.entidades.Usuario;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -51,7 +53,7 @@ public class EmpleadoControlador implements Serializable {
     private List<Cuenta> cuentasACAbiertas;
     private List<Cuenta> cuentasCDTMasUnAño;
     private Cuenta cuentaSeleccionada;
-    private Cuenta cuentaConMasMovUltMes;
+    private Cuenta cuentaConMasMovUltMes = new Cuenta();
     @EJB
     private TipoCuentaFacadeLocal tcfl;
     private List<TipoCuenta> tiposCuenta;
@@ -87,6 +89,17 @@ public class EmpleadoControlador implements Serializable {
     }
 
     public List<Cuenta> getCuentasCDTMasUnAño() {
+//        if (cuentasCDTMasUnAño == null || cuentasCDTMasUnAño.isEmpty()) {
+        Calendar year = Calendar.getInstance();
+        year.add(Calendar.YEAR, -1);
+        cuentasCDTMasUnAño = new ArrayList<>();
+
+        for (Cuenta c : cfl.findCDTAbiertas()) {
+            if (c.getFechaApertura().before(year.getTime()) && c.getEstado().equals("Abierta")) {
+                cuentasCDTMasUnAño.add(c);
+            }
+        }
+//        }
         return cuentasCDTMasUnAño;
     }
 
@@ -115,6 +128,23 @@ public class EmpleadoControlador implements Serializable {
     }
 
     public Cuenta getCuentaConMasMovUltMes() {
+        Integer mayor = Integer.MIN_VALUE;
+        Calendar mes = Calendar.getInstance();
+        mes.add(Calendar.MONTH, -1);
+
+        for (Cuenta c : cfl.findAllNoCanceladas()) {
+            int contador = 0;
+            for (MovimientoCuenta mc : c.getMovimientoCuentaList()) {
+                if (mc.getFecha().after(mes.getTime())) {
+                    contador++;
+                }
+            }
+
+            if (contador > mayor) {
+                cuentaConMasMovUltMes = c;
+            }
+        }
+
         return cuentaConMasMovUltMes;
     }
 
@@ -194,9 +224,17 @@ public class EmpleadoControlador implements Serializable {
     }
 
     public String cancelarCuentaCDT() {
+        MovimientoCuenta mc = new MovimientoCuenta();
+        mc.setFecha(new Date());
+        mc.setTblCuentasId(cuentaSeleccionada);
+        mc.setTipoMovimiento("Retiro");
+        mc.setValor(cuentaSeleccionada.getSaldo());
+        mcfl.create(mc);
+
         cuentaSeleccionada.setEstado("Cerrada");
         cuentaSeleccionada.setSaldo(0);
         cfl.edit(cuentaSeleccionada);
+
         cuentaSeleccionada = new Cuenta();
         return "cuentas.xhtml?faces-redirect=true";
     }

@@ -72,10 +72,11 @@ public class SesionControlador implements Serializable {
 
     public String iniciarSesion() {
         FacesContext fc = FacesContext.getCurrentInstance();
-        usuario = ufl.findCorreoClave(correo, clave);
-        rol = usuario.getTblTiposUsuariosId();
 
-        if (usuario != null) {
+        try {
+            usuario = ufl.findCorreoClave(correo, clave);
+            rol = usuario.getTblTiposUsuariosId();
+
             // Reviso el tipo de usuario
             switch (rol.getId()) {
                 case 1:
@@ -85,7 +86,7 @@ public class SesionControlador implements Serializable {
                 case 3:
                     return "cliente/index.xhtml?faces-redirect=true";
             }
-        } else {
+        } catch (NullPointerException npe) {
             fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuario no  encontrado.", "Revise que haya digitado bien los campos"));
         }
 

@@ -11,10 +11,12 @@ import edu.davr.prueba.modelo.dao.MovimientoCuentaFacadeLocal;
 import edu.davr.prueba.modelo.dao.SucursalFacadeLocal;
 import edu.davr.prueba.modelo.entidades.Ciudad;
 import edu.davr.prueba.modelo.entidades.Cuenta;
+import edu.davr.prueba.modelo.entidades.MovimientoCuenta;
 import edu.davr.prueba.modelo.entidades.Sucursal;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.List;
 import javax.ejb.EJB;
 
@@ -61,6 +63,22 @@ public class AdministradorControlador implements Serializable {
     }
 
     public Cuenta getCuentaConMasMovUltMes() {
+        Integer mayor = Integer.MIN_VALUE;
+        Calendar mes = Calendar.getInstance();
+        mes.add(Calendar.MONTH, -1);
+
+        for (Cuenta c : cuentafl.findAllNoCanceladas()) {
+            int contador = 0;
+            for (MovimientoCuenta mc : c.getMovimientoCuentaList()) {
+                if (mc.getFecha().after(mes.getTime())) {
+                    contador++;
+                }
+            }
+
+            if (contador > mayor) {
+                cuentaConMasMovUltMes = c;
+            }
+        }
         return cuentaConMasMovUltMes;
     }
 
