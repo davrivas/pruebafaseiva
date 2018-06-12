@@ -21,9 +21,6 @@ import edu.davr.prueba.modelo.entidades.Usuario;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -52,9 +49,9 @@ public class EmpleadoControlador implements Serializable {
     // Para las cuentas de ahorro y corriente
     private List<Cuenta> cuentasAC;
     private List<Cuenta> cuentasACAbiertas;
-//    private List<Cuenta> cuentasCDTMasUnYear = new ArrayList<>();
+    private List<Cuenta> cuentasCDTMasUnAño;
     private Cuenta cuentaSeleccionada;
-//    private Cuenta cuentaConMasMovUltMes;
+    private Cuenta cuentaConMasMovUltMes;
     @EJB
     private TipoCuentaFacadeLocal tcfl;
     private List<TipoCuenta> tiposCuenta;
@@ -73,24 +70,6 @@ public class EmpleadoControlador implements Serializable {
     public EmpleadoControlador() {
     }
 
-//    @PostConstruct
-//    public void init() {
-//        LocalDate hoy = LocalDate.now(); // Fecha de hoy
-//
-//        Date year = Date.from(hoy.minusYears(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
-//
-//        for (Cuenta c : cfl.findAllOrderByDate()) {
-//            if (c.getFechaApertura().before(year) && c.getTblTiposCuentasId().getId() == 3 && c.getEstado().equals("Abierta")) {
-//                cuentasCDTMasUnYear.add(c);
-//            }
-//        }
-//        Date mes = Date.from(hoy.minusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
-//        Integer maximo = Integer.MIN_VALUE;
-//
-//        for (Cuenta c : cfl.) {
-//
-//        }
-//    }
     public List<Cuenta> getCuentas() {
         return cfl.findAll();
     }
@@ -107,10 +86,10 @@ public class EmpleadoControlador implements Serializable {
         return cfl.findCuentasAhorrosAbiertas();
     }
 
-//    public List<Cuenta> getCuentasCDTMasUnYear() {
-//        return cfl.CDTMasUnYear();
-//        return cuentasCDTMasUnYear;
-//    }
+    public List<Cuenta> getCuentasCDTMasUnAño() {
+        return cuentasCDTMasUnAño;
+    }
+
     public Cuenta getCuentaSeleccionada() {
         return cuentaSeleccionada;
     }
@@ -120,7 +99,7 @@ public class EmpleadoControlador implements Serializable {
     }
 
     public List<MovimientoCuenta> getMovimientos() {
-        return mcfl.movimientosRecientes();
+        return mcfl.findAll();
     }
 
     public List<TipoCuenta> getTiposCuenta() {
@@ -135,9 +114,10 @@ public class EmpleadoControlador implements Serializable {
         this.movimientoCuenta = movimientoCuenta;
     }
 
-//    public Cuenta getCuentaConMasMovUltMes() {
-//        return cuentaConMasMovUltMes;
-//    }
+    public Cuenta getCuentaConMasMovUltMes() {
+        return cuentaConMasMovUltMes;
+    }
+
     public List<Usuario> getClientes() {
         return ufl.findClientes();
     }
@@ -163,12 +143,11 @@ public class EmpleadoControlador implements Serializable {
         movimientoCuenta.setFecha(fecha);
         movimientoCuenta.setTipoMovimiento("Consignación");
 
-        Cuenta cuentaAEditar = cfl.find(movimientoCuenta.getTblCuentasId().getId());
-        Double saldoAntiguo = cuentaAEditar.getSaldo();
+        Cuenta cuentaActual = cfl.find(movimientoCuenta.getTblCuentasId().getId());
+        Double saldoAntiguo = cuentaActual.getSaldo();
         Double saldoNuevo = movimientoCuenta.getValor();
         Double saldo = saldoAntiguo + saldoNuevo;
-        cuentaAEditar.setSaldo(saldo);
-        cfl.edit(cuentaAEditar);
+        cuentaActual.setSaldo(saldo);
 
         mcfl.create(movimientoCuenta);
 
@@ -182,12 +161,11 @@ public class EmpleadoControlador implements Serializable {
         movimientoCuenta.setFecha(fecha);
         movimientoCuenta.setTipoMovimiento("Retiro");
 
-        Cuenta cuentaAEditar = cfl.find(movimientoCuenta.getTblCuentasId().getId());
-        Double saldoAntiguo = cuentaAEditar.getSaldo();
+        Cuenta cuentaActual = cfl.find(movimientoCuenta.getTblCuentasId().getId());
+        Double saldoAntiguo = cuentaActual.getSaldo();
         Double saldoNuevo = movimientoCuenta.getValor();
         Double saldo = saldoAntiguo - saldoNuevo;
-        cuentaAEditar.setSaldo(saldo);
-        cfl.edit(cuentaAEditar);
+        cuentaActual.setSaldo(saldo);
 
         mcfl.create(movimientoCuenta);
 
@@ -215,21 +193,12 @@ public class EmpleadoControlador implements Serializable {
         return "cuentas.xhtml?faces-redirect=true";
     }
 
-//    public String cancelarCuentaCDT() {
-//        // Registro el movimiento
-//        MovimientoCuenta mv = new MovimientoCuenta();
-//        Date fecha = new Date();
-//        mv.setFecha(fecha);
-//        mv.setTipoMovimiento("Retiro");
-//        mv.setTblCuentasId(cuentaSeleccionada);
-//        mv.setValor(cuentaSeleccionada.getSaldo());
-//        mcfl.create(mv);
-//
-//        // Cancelo la cuenta
-//        cuentaSeleccionada.setEstado("Cerrada");
-//        cuentaSeleccionada.setSaldo(0);
-//        cfl.edit(cuentaSeleccionada);
-//        cuentaSeleccionada = new Cuenta();
-//        return "cuentas.xhtml?faces-redirect=true";
-//    }
+    public String cancelarCuentaCDT() {
+        cuentaSeleccionada.setEstado("Cerrada");
+        cuentaSeleccionada.setSaldo(0);
+        cfl.edit(cuentaSeleccionada);
+        cuentaSeleccionada = new Cuenta();
+        return "cuentas.xhtml?faces-redirect=true";
+    }
+
 }

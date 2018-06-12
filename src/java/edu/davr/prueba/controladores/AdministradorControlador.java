@@ -57,7 +57,7 @@ public class AdministradorControlador implements Serializable {
     }
 
     public List<Cuenta> getCuentas() {
-        return cuentafl.findAllOrderByDate();
+        return cuentafl.findAll();
     }
 
     public Cuenta getCuentaConMasMovUltMes() {

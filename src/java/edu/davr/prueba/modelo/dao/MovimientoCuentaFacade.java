@@ -6,7 +6,6 @@
 package edu.davr.prueba.modelo.dao;
 
 import edu.davr.prueba.modelo.entidades.MovimientoCuenta;
-import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -33,14 +32,21 @@ public class MovimientoCuentaFacade extends AbstractFacade<MovimientoCuenta> imp
         super(MovimientoCuenta.class);
     }
 
-    @Override
-    public List<MovimientoCuenta> movimientosRecientes() {
-        try {
-            TypedQuery<MovimientoCuenta> tq = getEntityManager().createQuery("SELECT m FROM MovimientoCuenta m ORDER BY m.fecha DESC", MovimientoCuenta.class);
-            return tq.getResultList();
-        } catch (NoResultException nre) {
-            return null;
-        }
-    }
+//    @Override
+//    public MovimientoCuenta cuentaConMasMovimientos() {
+//        try {
+//            Query q = getEntityManager().createNativeQuery("SELECT MAX(contado) FROM (\n"
+//                    + "	SELECT COUNT(m.*) AS contado\n"
+//                    + "    FROM tbl_movimientos_cuentas m\n"
+//                    + "    WHERE MONTH(m.fecha) = MONTH(NOW())\n"
+//                    + "    GROUP BY m.tbl_cuentas_id \n"
+//                    + ") as max_mov", MovimientoCuenta.class);
+//            TypedQuery<MovimientoCuenta> q;
+//            q = getEntityManager().createNamedQuery("MovimientoCuenta.cuentaConMasMovimientos", MovimientoCuenta.class);
+//            return (MovimientoCuenta) q.getSingleResult();
+//        } catch (NoResultException nre) {
+//            return null;
+//        }
+//    }
 
 }
